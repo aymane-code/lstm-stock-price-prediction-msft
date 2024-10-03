@@ -1,0 +1,30 @@
+Résumé de tout ce que nous avons fait dans ce projet :
+Chargement et Préparation des Données :
+
+Nous avons téléchargé les données historiques de Microsoft (MSFT) depuis Yahoo Finance, en particulier les prix de clôture.
+Nous avons formaté les données pour ne garder que les colonnes Date et Close.
+Les dates ont été converties en index du DataFrame pour faciliter les opérations de manipulation des séries temporelles.
+Transformation des Données en Fenêtres (Sliding Windows) :
+
+Nous avons créé une fonction appelée df_to_windowed_df qui prend les prix de clôture et les segmente en fenêtres de taille fixe (par exemple, 3 jours), permettant ainsi de créer des ensembles d’entraînement pour le modèle. Chaque fenêtre de taille n est utilisée pour prédire la valeur du jour suivant.
+Le résultat est un DataFrame où chaque ligne contient une fenêtre de n jours, les valeurs cibles associées (prix du jour suivant), et les dates correspondantes.
+Formatage des Données pour l'Entraînement :
+
+Nous avons transformé le DataFrame fenêtré en matrices numpy grâce à la fonction windowed_df_to_date_X_y, ce qui a permis de structurer les données sous forme d’entrée pour les réseaux de neurones : X (les fenêtres de données historiques) et y (les cibles à prédire).
+Nous avons également divisé ces données en ensembles d’entraînement, de validation, et de test (80% pour l'entraînement, 10% pour la validation, et 10% pour le test).
+Construction et Entraînement du Modèle :
+
+Un modèle LSTM a été construit avec TensorFlow Keras. Il est constitué de :
+Une couche d’entrée prenant des séquences de longueur fixe (3 jours dans notre cas).
+Une couche LSTM pour capturer les relations temporelles dans les données.
+Deux couches fully connected (Dense) avec une fonction d’activation ReLU.
+Une dernière couche de sortie à un neurone, pour prédire une seule valeur (le prix de clôture du jour suivant).
+Le modèle a été compilé avec une fonction de perte MSE (erreur quadratique moyenne) et l’optimiseur Adam, puis il a été entraîné sur 100 époques avec les ensembles d’entraînement et de validation.
+Évaluation des Prédictions :
+
+Nous avons fait des prédictions sur l'ensemble d'entraînement et tracé les prédictions par rapport aux valeurs réelles pour voir comment le modèle s'est comporté sur les données d'entraînement.
+La même démarche a été répétée pour les ensembles de validation et de test, en comparant visuellement les prédictions du modèle aux observations réelles.
+Prédictions Récursives :
+
+Nous avons utilisé une méthode de prédiction récursive, où chaque nouvelle prédiction est basée sur les prédictions précédentes plutôt que sur les vraies données d'entrée. Cela simule la manière dont le modèle se comporterait dans une situation réelle où il doit faire des prédictions futures sans avoir accès aux données réelles.
+Nous avons visualisé les résultats de ces prédictions récursives pour voir comment le modèle performe à long terme.
